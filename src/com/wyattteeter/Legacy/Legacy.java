@@ -21,8 +21,8 @@ public class Legacy extends JavaPlugin implements Listener {
 	public static Map<UUID, Long> timeTracker = new HashMap<UUID, Long>(100);
 	public static Map<UUID, Long> timeAway = new HashMap<UUID, Long>(100);
 	public static final Logger log = Logger.getLogger("Legacy");
-	static FileConfiguration configConfiguration = null;
-	static File configFile = null;
+	public static FileConfiguration configConfiguration = null;
+	public static File configFile = null;
 	static FileConfiguration logConfiguration = null;
 	static File logFile = null;
 	public static int top;
@@ -36,6 +36,7 @@ public class Legacy extends JavaPlugin implements Listener {
 	@Override
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents((Listener) new EventListener(), this);
+		this.getCommand("legacy").setExecutor(new Commands());
 
 		this.saveDefaultConfig();
 		loadConfig();
@@ -45,7 +46,9 @@ public class Legacy extends JavaPlugin implements Listener {
 		int delay = configConfiguration.getInt("auto-save.frequency") * 20 * 60;
 		getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 			public void run() {
-				Legacy.this.savePlayerTime();
+				if(!Bukkit.getOnlinePlayers().isEmpty()){
+					Legacy.this.savePlayerTime();
+				}
 			}
 		}, delay, delay);
 

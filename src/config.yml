@@ -3,7 +3,7 @@ idle:
   timeout: 15
 auto-save:
 #Amount of time (in minutes) Legacy waits to save data to log.yml
-  frequency: 1
+  frequency: 2
 top:
 #Number of players displayed when using /legacy top
   players: 10

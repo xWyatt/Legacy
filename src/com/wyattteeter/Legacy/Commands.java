@@ -10,11 +10,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor {
-	public Commands(Legacy plugin) {
-	}
 
 	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 		Boolean isPlayer = sender instanceof Player;
@@ -29,7 +28,7 @@ public class Commands implements CommandExecutor {
 				return false;
 			}
 			if ((args.length == 0) && (isPlayer.booleanValue())) {
-				if (sender.hasPermission("legacy.check")) {
+				if (!sender.hasPermission("legacy.check")) {
 					Bukkit.getPlayer(uuid)
 							.sendMessage(ChatColor.GREEN + "Time played: " + ChatColor.GOLD + Legacy.getPlaytime(uuid));
 					return true;
@@ -38,13 +37,12 @@ public class Commands implements CommandExecutor {
 					return true;
 				}
 			}
-			// XXX /legacy top
+
 			if ((args.length == 1) && (args[0].equals("top"))) {
-				if (sender.hasPermission("legacy.others")) {
+				if (!sender.hasPermission("legacy.top")) {
 					sender.sendMessage(ChatColor.DARK_RED + "You do not have permission to perform this action");
 					return true;
 				}
-
 
 				Map<String, Long> tempTracker = new HashMap<String, Long>(500);
 				Map<String, Long> sortTracker = new HashMap<String, Long>(5);
@@ -56,7 +54,6 @@ public class Commands implements CommandExecutor {
 					tempTracker.put(each, Long.valueOf(Legacy.logConfiguration.getLong(each)));
 				}
 				sender.sendMessage(ChatColor.GREEN + "-= Legacy Leaderboard =-");
-				// XXX This is where you change /legacy top commands
 				for (int i = 1; i < Legacy.top + 1; i++) {
 					highTime = 0L;
 					for (Map.Entry<String, Long> entry : tempTracker.entrySet()) {
@@ -72,26 +69,23 @@ public class Commands implements CommandExecutor {
 				}
 				return true;
 			}
-			if ((args.length == 1) && (args[0].equals("total"))) {
-				if (sender.hasPermission("legacy.others")) {
+			
+			if ((args.length == 1) && (args[0].equals("reload"))) {
+				if (!sender.hasPermission("legacy.reload")) {
 					sender.sendMessage(ChatColor.DARK_RED + "You do not have permission to perform this action");
 					return true;
+				} else{
+					Legacy.configConfiguration = YamlConfiguration.loadConfiguration(Legacy.configFile);
+					sender.sendMessage(ChatColor.GREEN + "Configuration files have been reloaded!");
+					return true;
 				}
-				long totalTime = 0L;
-				for (String each : Legacy.logConfiguration.getConfigurationSection("").getKeys(false)) {
-					totalTime += Legacy.logConfiguration.getLong(each);
-				}
-				sender.sendMessage(
-						ChatColor.GREEN + "Total Played: " + ChatColor.GOLD + timePlayed(Long.valueOf(totalTime)));
-				return true;
 			}
 
 			if (args.length == 1) {
-				if (sender.hasPermission("legacy.others")) {
+				if (!sender.hasPermission("legacy.others")) {
 					sender.sendMessage(ChatColor.DARK_RED + "You do not have permission to perform this action");
 					return true;
 				}
-
 				String playerName = args[0];
 				UUID playerUUID = Bukkit.getPlayer(playerName).getUniqueId();
 

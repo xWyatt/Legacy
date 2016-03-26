@@ -16,5 +16,8 @@ permissions:
     description: Allows use of /legacy (player)
     default: op
   legacy.top:
-    description: Allows use of /legacy (leaderboard)
+    description: Allows use of /legacy top
+    default: op
+  legacy.reload:
+    description: Allows use of /legacy reload
     default: op
