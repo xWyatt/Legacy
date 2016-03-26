@@ -1,8 +1,9 @@
 main: com.wyattteeter.Legacy.Legacy
 name: Legacy
 version: 1
-author: Wyatt Teeter
-description: A plugin to keep track of player's cumulative time
+description: This plugin keeps track of your Players' cumulative play time!
+authors: [xWyatt, vioCode]
+website: http://github.com/xWyatt/Legacy
 commands:
   legacy:
     description: Displays server play time.
