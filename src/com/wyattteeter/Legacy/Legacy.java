@@ -28,21 +28,7 @@ public class Legacy extends JavaPlugin implements Listener {
 
 	@Override
 	public void onDisable() {
-		Date now = new Date();
-		for (Player each : getServer().getOnlinePlayers()) {
-			long playerSession = (now.getTime() - ((Long) timeTracker.get(each)).longValue()) / 1000L;
-			if (logConfiguration.contains(each.getName())) {
-				configConfiguration.set(each.getName(),
-						Long.valueOf(logConfiguration.getLong(each.getName()) + playerSession));
-			} else {
-				logConfiguration.set(each.getName(), Long.valueOf(playerSession));
-			}
-			saveLog();
-
-			timeTracker.remove(each);
-		}
-		log.info("[Legacy] Auto-saved player time");
-
+		savePlayerTime();
 		log.info(this + " is now disabled.");
 	}
 
@@ -50,10 +36,10 @@ public class Legacy extends JavaPlugin implements Listener {
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents((Listener) new EventListener(), this);
 
+		this.saveDefaultConfig();
 		loadConfig();
-		saveConfig();
 		loadLog();
-		saveConfig();
+		saveLog();
 
 		int delay = configConfiguration.getInt("auto-save.frequency") * 20 * 60;
 		getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
@@ -121,6 +107,7 @@ public class Legacy extends JavaPlugin implements Listener {
 		for (Player each : getServer().getOnlinePlayers()) {
 			timeTracker.put(each.getUniqueId(), Long.valueOf(now.getTime()));
 		}
+		log.info("[Legacy] Auto-saved player time");
 	}
 
 	@SuppressWarnings("static-access")
