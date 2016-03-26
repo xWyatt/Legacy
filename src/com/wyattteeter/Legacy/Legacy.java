@@ -25,6 +25,7 @@ public class Legacy extends JavaPlugin implements Listener {
 	static File configFile = null;
 	static FileConfiguration logConfiguration = null;
 	static File logFile = null;
+	public static int top;
 
 	@Override
 	public void onDisable() {
@@ -54,7 +55,8 @@ public class Legacy extends JavaPlugin implements Listener {
 				Legacy.this.idleTime();
 			}
 		}, delay, delay);
-
+		
+		top = configConfiguration.getInt("top.players");
 	}
 
 	protected void idleTime() {

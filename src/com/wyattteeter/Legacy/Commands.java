@@ -57,7 +57,7 @@ public class Commands implements CommandExecutor {
 				}
 				sender.sendMessage(ChatColor.GREEN + "-= Legacy Leaderboard =-");
 				// XXX This is where you change /legacy top commands
-				for (int i = 1; i < 21; i++) {
+				for (int i = 1; i < Legacy.top + 1; i++) {
 					highTime = 0L;
 					for (Map.Entry<String, Long> entry : tempTracker.entrySet()) {
 						if ((((Long) entry.getValue()).longValue() > highTime)
