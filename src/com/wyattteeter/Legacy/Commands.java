@@ -29,11 +29,11 @@ public class Commands implements CommandExecutor {
 			}
 			if ((args.length == 0) && (isPlayer.booleanValue())) {
 				if (!sender.hasPermission("legacy.check")) {
-					Bukkit.getPlayer(uuid)
-							.sendMessage(ChatColor.GREEN + "Time played: " + ChatColor.GOLD + Legacy.getPlaytime(uuid));
+					sender.sendMessage(ChatColor.DARK_RED + "You do not have permission to perform this action");
 					return true;
 				} else {
-					sender.sendMessage(ChatColor.DARK_RED + "You do not have permission to perform this action");
+					Bukkit.getPlayer(uuid)
+							.sendMessage(ChatColor.GREEN + "Time played: " + ChatColor.GOLD + Legacy.getPlaytime(uuid));
 					return true;
 				}
 			}
@@ -48,33 +48,34 @@ public class Commands implements CommandExecutor {
 				Map<String, Long> sortTracker = new HashMap<String, Long>(5);
 				String highPlayer = "";
 				long highTime = 0L;
-				
-				
+
 				for (String each : Legacy.logConfiguration.getConfigurationSection("").getKeys(false)) {
 					tempTracker.put(each, Long.valueOf(Legacy.logConfiguration.getLong(each)));
 				}
 				sender.sendMessage(ChatColor.GREEN + "-= Legacy Leaderboard =-");
 				for (int i = 1; i < Legacy.top + 1; i++) {
 					highTime = 0L;
+					
 					for (Map.Entry<String, Long> entry : tempTracker.entrySet()) {
 						if ((((Long) entry.getValue()).longValue() > highTime)
 								&& (!sortTracker.containsKey(entry.getKey()))) {
-							highPlayer = (String) entry.getKey();
+							highPlayer = Bukkit.getPlayer(UUID.fromString(entry.getKey())).getName();
 							highTime = ((Long) entry.getValue()).longValue();
 						}
 					}
 					sortTracker.put(highPlayer, Long.valueOf(highTime));
-					sender.sendMessage(ChatColor.RED + String.valueOf(i) + ". " + ChatColor.GREEN + highPlayer + ": "
-							+ ChatColor.GOLD + timePlayed(Long.valueOf(highTime)));
+					sender.sendMessage(ChatColor.RED + String.valueOf(i) + ". " + ChatColor.GREEN
+							+ highPlayer + ": " + ChatColor.GOLD
+							+ timePlayed(Long.valueOf(highTime)));
 				}
 				return true;
 			}
-			
+
 			if ((args.length == 1) && (args[0].equals("reload"))) {
 				if (!sender.hasPermission("legacy.reload")) {
 					sender.sendMessage(ChatColor.DARK_RED + "You do not have permission to perform this action");
 					return true;
-				} else{
+				} else {
 					Legacy.configConfiguration = YamlConfiguration.loadConfiguration(Legacy.configFile);
 					sender.sendMessage(ChatColor.GREEN + "Configuration files have been reloaded!");
 					return true;
@@ -87,16 +88,15 @@ public class Commands implements CommandExecutor {
 					return true;
 				}
 				String playerName = args[0];
+				
+				if (Bukkit.getPlayer(playerName) == null){
+					sender.sendMessage(ChatColor.DARK_RED + playerName + " has never played on this server!");
+					return true;
+				}
+				
 				UUID playerUUID = Bukkit.getPlayer(playerName).getUniqueId();
-
+				
 				long totalTime = 0L;
-
-				/*
-				 * for (Entry<UUID, Long> entry : Legacy.timeTracker.entrySet())
-				 * { if ((Bukkit.getPlayer(entry.getKey()).getName().contains(
-				 * playerName))) { totalTime += (now.getTime() -
-				 * ((Long)entry.getValue()).longValue()) / 1000L; } }
-				 */
 
 				if (Legacy.logConfiguration.contains(playerUUID.toString())) {
 					totalTime += Legacy.logConfiguration.getLong(playerUUID.toString());
