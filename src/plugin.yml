@@ -1,0 +1,19 @@
+main: com.wyattteeter.Legacy.Legacy
+name: Legacy
+version: 1
+author: Wyatt Teeter
+description: A plugin to keep track of player's cumulative time
+commands:
+  legacy:
+    description: Displays server play time.
+    usage: /<command> <player>
+permissions:
+  legacy.check:
+    description: Allows use of /legacy.
+    default: op
+  legacy.others:
+    description: Allows use of /legacy (player)
+    default: op
+  legacy.top:
+    description: Allows use of /legacy (leaderboard)
+    default: op

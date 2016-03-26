@@ -1,0 +1,5 @@
+idle:
+  timeout: 15
+  frequency: 1
+top:
+  players: 20
