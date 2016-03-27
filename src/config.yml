@@ -7,3 +7,6 @@ auto-save:
 top:
 #Number of players displayed when using /legacy top
   players: 10
+
+#Please don't touch the version number :)
+version: 1.0

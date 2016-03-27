@@ -37,9 +37,14 @@ public class Legacy extends JavaPlugin implements Listener {
 	public void onEnable() {
 		getServer().getPluginManager().registerEvents((Listener) new EventListener(), this);
 		this.getCommand("legacy").setExecutor(new Commands());
-
+		
 		this.saveDefaultConfig();
 		loadConfig();
+		
+		if(versionCheck()){
+			updateLog();
+		}
+		
 		loadLog();
 		saveLog();
 
@@ -145,7 +150,7 @@ public class Legacy extends JavaPlugin implements Listener {
 	public void loadLog() {
 		if (logConfiguration == null) {
 			if (logFile == null) {
-				logFile = new File(getDataFolder(), "log.yml");
+				logFile = new File(getDataFolder(), "players.yml");
 			}
 			logConfiguration = YamlConfiguration.loadConfiguration(logFile);
 		}
@@ -175,5 +180,17 @@ public class Legacy extends JavaPlugin implements Listener {
 		}
 
 		return totalTime;
+	}
+	
+	public boolean versionCheck(){
+		if (configConfiguration.isSet("version") && configConfiguration.getDouble("version") == 1.0){
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	private void updateLog(){
+		//NeedsImplementation
 	}
 }
