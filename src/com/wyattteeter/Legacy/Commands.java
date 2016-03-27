@@ -2,6 +2,7 @@ package com.wyattteeter.Legacy;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -44,33 +45,31 @@ public class Commands implements CommandExecutor {
 					sender.sendMessage(ChatColor.DARK_RED + "You do not have permission to perform this action");
 					return true;
 				}
-
-				Map<String, Long> tempTracker = new HashMap<String, Long>(500);
-				Map<String, Long> sortTracker = new HashMap<String, Long>(5);
-				String highPlayer = "";
-				long highTime = 0L;
-
-				for (String each : Legacy.logConfiguration.getConfigurationSection("").getKeys(false)) {
-					tempTracker.put(each, Long.valueOf(Legacy.logConfiguration.getLong(each)));
-				}
-				sender.sendMessage(ChatColor.GREEN + "-= Legacy Leaderboard =-");
-				for (int i = 1; i < Legacy.top + 1; i++) {
-					highTime = 0L;
-					
-					for (Map.Entry<String, Long> entry : tempTracker.entrySet()) {
-						if ((((Long) entry.getValue()).longValue() > highTime)
-								&& (!sortTracker.containsKey(entry.getKey()))) {
-							highPlayer = Bukkit.getOfflinePlayer(UUID.fromString(entry.getKey())).getName();
-							highTime = ((Long) entry.getValue()).longValue();
-						}
-					}
-					sortTracker.put(highPlayer, Long.valueOf(highTime));
-					sender.sendMessage(ChatColor.RED + String.valueOf(i) + ". " + ChatColor.GREEN
-							+ highPlayer + ": " + ChatColor.GOLD
-							+ timePlayed(Long.valueOf(highTime)));
-				}
-				return true;
-			}
+			        Map<UUID, Long> tempTracker = new HashMap<UUID, Long>(500);
+			        Map<UUID, Long> sortTracker = new HashMap<UUID, Long>(5);
+			        UUID highPlayer = null;
+			        long highTime = 0L;
+			        for (String each : Legacy.logConfiguration.getConfigurationSection("").getKeys(false)) {
+			        	UUID eachUUID = UUID.fromString(each);
+			          tempTracker.put(eachUUID, Long.valueOf(Legacy.logConfiguration.getLong(each.toString())));
+			        }
+			        sender.sendMessage(ChatColor.GREEN + "-= Legacy Leaderboard =-");
+			        
+			        for (int i = 1; i < Legacy.top + 1; i++)
+			        {
+			          highTime = 0L;
+			          for (Entry<UUID, Long> entry : tempTracker.entrySet()) {
+			            if ((((Long)entry.getValue()).longValue() > highTime) && (!sortTracker.containsKey(entry.getKey())))
+			            {
+			              highPlayer = entry.getKey();
+			              highTime = ((Long)entry.getValue()).longValue();
+			            }
+			          }
+			          sortTracker.put(highPlayer, Long.valueOf(highTime));
+			          sender.sendMessage(ChatColor.RED + String.valueOf(i) + ". " + ChatColor.GREEN + Bukkit.getOfflinePlayer(highPlayer).getName() + ": " + ChatColor.GOLD + timePlayed(Long.valueOf(highTime)));
+			        }
+			        return true;
+			      }
 
 			if ((args.length == 1) && (args[0].equals("reload"))) {
 				if (!sender.hasPermission("legacy.reload")) {
