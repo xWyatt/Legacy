@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor {
 
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 		Boolean isPlayer = sender instanceof Player;
 		UUID uuid = null;
@@ -59,7 +60,7 @@ public class Commands implements CommandExecutor {
 					for (Map.Entry<String, Long> entry : tempTracker.entrySet()) {
 						if ((((Long) entry.getValue()).longValue() > highTime)
 								&& (!sortTracker.containsKey(entry.getKey()))) {
-							highPlayer = Bukkit.getPlayer(UUID.fromString(entry.getKey())).getName();
+							highPlayer = Bukkit.getOfflinePlayer(UUID.fromString(entry.getKey())).getName();
 							highTime = ((Long) entry.getValue()).longValue();
 						}
 					}
@@ -89,12 +90,12 @@ public class Commands implements CommandExecutor {
 				}
 				String playerName = args[0];
 				
-				if (Bukkit.getPlayer(playerName) == null){
+				if (Bukkit.getOfflinePlayer(playerName) == null){
 					sender.sendMessage(ChatColor.DARK_RED + playerName + " has never played on this server!");
 					return true;
 				}
 				
-				UUID playerUUID = Bukkit.getPlayer(playerName).getUniqueId();
+				UUID playerUUID = Bukkit.getOfflinePlayer(playerName).getUniqueId();
 				
 				long totalTime = 0L;
 
