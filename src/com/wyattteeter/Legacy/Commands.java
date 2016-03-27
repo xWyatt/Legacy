@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,9 +18,9 @@ public class Commands implements CommandExecutor {
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 		Boolean isPlayer = sender instanceof Player;
-		UUID uuid = null;
-		if (isPlayer.booleanValue()) {
-			uuid = ((OfflinePlayer) sender).getUniqueId();
+		if (!isPlayer.booleanValue()) {
+			sender.sendMessage(ChatColor.DARK_RED + "You must be a player to perform this action!");
+			return true;
 		}
 
 		String cmd = command.getName().toLowerCase();
@@ -33,11 +32,17 @@ public class Commands implements CommandExecutor {
 				if (!sender.hasPermission("legacy.check")) {
 					sender.sendMessage(ChatColor.DARK_RED + "You do not have permission to perform this action");
 					return true;
-				} else {
-					Bukkit.getPlayer(uuid)
-							.sendMessage(ChatColor.GREEN + "Time played: " + ChatColor.GOLD + Legacy.getPlaytime(uuid));
-					return true;
 				}
+				
+				UUID playerUUID = Bukkit.getPlayer(sender.getName()).getUniqueId();
+				Long totalTime = 0L;
+				
+				if (Legacy.logConfiguration.contains(playerUUID.toString())) {
+					totalTime += Legacy.logConfiguration.getLong(playerUUID.toString());
+				}
+				sender.sendMessage(ChatColor.GREEN + "You have played: " + ChatColor.GOLD
+						+ timePlayed(Long.valueOf(totalTime)));
+				return true;
 			}
 
 			if ((args.length == 1) && (args[0].equals("top"))) {
@@ -45,31 +50,32 @@ public class Commands implements CommandExecutor {
 					sender.sendMessage(ChatColor.DARK_RED + "You do not have permission to perform this action");
 					return true;
 				}
-			        Map<UUID, Long> tempTracker = new HashMap<UUID, Long>(500);
-			        Map<UUID, Long> sortTracker = new HashMap<UUID, Long>(5);
-			        UUID highPlayer = null;
-			        long highTime = 0L;
-			        for (String each : Legacy.logConfiguration.getConfigurationSection("").getKeys(false)) {
-			        	UUID eachUUID = UUID.fromString(each);
-			          tempTracker.put(eachUUID, Long.valueOf(Legacy.logConfiguration.getLong(each.toString())));
-			        }
-			        sender.sendMessage(ChatColor.GREEN + "-= Legacy Leaderboard =-");
-			        
-			        for (int i = 1; i < Legacy.top + 1; i++)
-			        {
-			          highTime = 0L;
-			          for (Entry<UUID, Long> entry : tempTracker.entrySet()) {
-			            if ((((Long)entry.getValue()).longValue() > highTime) && (!sortTracker.containsKey(entry.getKey())))
-			            {
-			              highPlayer = entry.getKey();
-			              highTime = ((Long)entry.getValue()).longValue();
-			            }
-			          }
-			          sortTracker.put(highPlayer, Long.valueOf(highTime));
-			          sender.sendMessage(ChatColor.RED + String.valueOf(i) + ". " + ChatColor.GREEN + Bukkit.getOfflinePlayer(highPlayer).getName() + ": " + ChatColor.GOLD + timePlayed(Long.valueOf(highTime)));
-			        }
-			        return true;
-			      }
+				Map<UUID, Long> tempTracker = new HashMap<UUID, Long>(500);
+				Map<UUID, Long> sortTracker = new HashMap<UUID, Long>(5);
+				UUID highPlayer = null;
+				long highTime = 0L;
+				for (String each : Legacy.logConfiguration.getConfigurationSection("").getKeys(false)) {
+					UUID eachUUID = UUID.fromString(each);
+					tempTracker.put(eachUUID, Long.valueOf(Legacy.logConfiguration.getLong(each.toString())));
+				}
+				sender.sendMessage(ChatColor.GREEN + "-= Legacy Leaderboard =-");
+
+				for (int i = 1; i < Legacy.top + 1; i++) {
+					highTime = 0L;
+					for (Entry<UUID, Long> entry : tempTracker.entrySet()) {
+						if ((((Long) entry.getValue()).longValue() > highTime)
+								&& (!sortTracker.containsKey(entry.getKey()))) {
+							highPlayer = entry.getKey();
+							highTime = ((Long) entry.getValue()).longValue();
+						}
+					}
+					sortTracker.put(highPlayer, Long.valueOf(highTime));
+					sender.sendMessage(ChatColor.RED + String.valueOf(i) + ". " + ChatColor.GREEN
+							+ Bukkit.getOfflinePlayer(highPlayer).getName() + ": " + ChatColor.GOLD
+							+ timePlayed(Long.valueOf(highTime)));
+				}
+				return true;
+			}
 
 			if ((args.length == 1) && (args[0].equals("reload"))) {
 				if (!sender.hasPermission("legacy.reload")) {
@@ -88,14 +94,14 @@ public class Commands implements CommandExecutor {
 					return true;
 				}
 				String playerName = args[0];
-				
-				if (Bukkit.getOfflinePlayer(playerName) == null){
+
+				if (Bukkit.getOfflinePlayer(playerName) == null) {
 					sender.sendMessage(ChatColor.DARK_RED + playerName + " has never played on this server!");
 					return true;
 				}
-				
+
 				UUID playerUUID = Bukkit.getOfflinePlayer(playerName).getUniqueId();
-				
+
 				long totalTime = 0L;
 
 				if (Legacy.logConfiguration.contains(playerUUID.toString())) {
