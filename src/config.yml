@@ -1,12 +1,10 @@
-idle:
 #Amount of time (in minutes) Legacy waits before marking a player AFK
-  timeout: 15
-auto-save:
+idle_timeout: 15
 #Amount of time (in minutes) Legacy waits to save data to log.yml
-  frequency: 2
-top:
+autosave_frequency: 2
 #Number of players displayed when using /legacy top
-  players: 10
+top_players: 10
 
-#Please don't touch the version number :)
+#Please don't touch the version number, or the world might explode :)
+#Really though. Don't touch it.
 version: 1.0

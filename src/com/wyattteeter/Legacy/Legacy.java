@@ -48,7 +48,7 @@ public class Legacy extends JavaPlugin implements Listener {
 		loadLog();
 		saveLog();
 
-		int delay = configConfiguration.getInt("auto-save.frequency") * 20 * 60;
+		int delay = configConfiguration.getInt("autosave_frequency") * 20 * 60;
 		getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 			public void run() {
 				if(!Bukkit.getOnlinePlayers().isEmpty()){
@@ -57,20 +57,20 @@ public class Legacy extends JavaPlugin implements Listener {
 			}
 		}, delay, delay);
 
-		delay = configConfiguration.getInt("idle.frequency") * 20 * 60;
+		delay = configConfiguration.getInt("idle_frequency") * 20 * 60;
 		getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 			public void run() {
 				Legacy.this.idleTime();
 			}
 		}, delay, delay);
 		
-		top = configConfiguration.getInt("top.players");
+		top = configConfiguration.getInt("top_players");
 	}
 
 	protected void idleTime() {
 		Date date = new Date();
 		for (Map.Entry<UUID, Long> entry : timeAway.entrySet()) {
-			if (((Long) entry.getValue()).longValue() + configConfiguration.getInt("idle.timeout") * 1000 * 60 < date
+			if (((Long) entry.getValue()).longValue() + configConfiguration.getInt("idle_timeout") * 1000 * 60 < date
 					.getTime()) {
 				Legacy.pausePlayerLegacy(entry.getKey());
 			}
@@ -192,5 +192,9 @@ public class Legacy extends JavaPlugin implements Listener {
 	
 	private void updateLog(){
 		//NeedsImplementation
+	}
+
+	public void reload() {
+		reloadConfig();		
 	}
 }
