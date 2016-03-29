@@ -20,13 +20,14 @@ public class Legacy extends JavaPlugin implements Listener {
 
 	public static Map<UUID, Long> timeTracker = new HashMap<UUID, Long>(100);
 	public static Map<UUID, Long> timeAway = new HashMap<UUID, Long>(100);
-	public static final Logger log = Logger.getLogger("Legacy");
 	public static FileConfiguration configConfiguration = null;
-	public static File configFile = null;
-	static FileConfiguration logConfiguration = null;
-	static File logFile = null;
 	public static int top;
 	public static Legacy plugin;
+	public static FileConfiguration logConfiguration = null;
+	
+	private static final Logger log = Logger.getLogger("Legacy");
+	private static File configFile = null;
+	private static File logFile = null;
 
 	@Override
 	public void onDisable() {
@@ -65,8 +66,6 @@ public class Legacy extends JavaPlugin implements Listener {
 				Legacy.this.idleTime();
 			}
 		}, delay, delay);
-		
-		top = configConfiguration.getInt("top_players");
 	}
 
 	protected void idleTime() {
@@ -139,6 +138,9 @@ public class Legacy extends JavaPlugin implements Listener {
 			}
 			configConfiguration = YamlConfiguration.loadConfiguration(configFile);
 		}
+		
+		top = configConfiguration.getInt("top_players");
+		
 	}
 
 	public void saveConfig() {

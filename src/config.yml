@@ -1,7 +1,9 @@
 #Amount of time (in minutes) Legacy waits before marking a player AFK
 idle_timeout: 15
+
 #Amount of time (in minutes) Legacy waits to save data to log.yml
 autosave_frequency: 2
+
 #Number of players displayed when using /legacy top
 top_players: 10
 
