@@ -26,6 +26,7 @@ public class Legacy extends JavaPlugin implements Listener {
 	static FileConfiguration logConfiguration = null;
 	static File logFile = null;
 	public static int top;
+	public static Legacy plugin;
 
 	@Override
 	public void onDisable() {
@@ -35,6 +36,7 @@ public class Legacy extends JavaPlugin implements Listener {
 
 	@Override
 	public void onEnable() {
+		plugin = this;
 		getServer().getPluginManager().registerEvents((Listener) new EventListener(), this);
 		this.getCommand("legacy").setExecutor(new Commands());
 		

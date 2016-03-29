@@ -81,7 +81,7 @@ public class Commands implements CommandExecutor {
 					sender.sendMessage(ChatColor.DARK_RED + "You do not have permission to perform this action");
 					return true;
 				} else {
-					//Implement something here that reloads config.yml
+					Legacy.plugin.reloadConfig();
 					sender.sendMessage(ChatColor.GREEN + "Configuration files have been reloaded!");
 					return true;
 				}
