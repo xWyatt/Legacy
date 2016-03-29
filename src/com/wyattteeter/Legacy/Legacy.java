@@ -192,7 +192,7 @@ public class Legacy extends JavaPlugin implements Listener {
 	}
 	
 	public boolean versionCheck(){
-		if (configConfiguration.isSet("version") && configConfiguration.getDouble("version") == 1.0){
+		if (configConfiguration.isSet("version") && configConfiguration.getDouble("version") == 2.0){
 			return false;
 		} else {
 			return true;

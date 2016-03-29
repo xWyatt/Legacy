@@ -1,6 +1,6 @@
 main: com.wyattteeter.Legacy.Legacy
 name: Legacy
-version: 1
+version: 2.0
 description: This plugin keeps track of your Players' cumulative play time!
 authors: [xWyatt, vioCode]
 website: http://github.com/xWyatt/Legacy
