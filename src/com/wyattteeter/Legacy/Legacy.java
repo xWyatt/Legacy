@@ -45,9 +45,14 @@ public class Legacy extends JavaPlugin implements Listener {
 		loadConfig();
 		
 		if(versionCheck()){
-			updateLog();
+			log.severe("------------");
+			log.severe("[Legacy] Invalid version number in config");
+			log.severe("[Legacy] Disabling plugin. Please delete your config.yml");
+			log.severe("------------");
+			
+			Bukkit.getPluginManager().disablePlugin(plugin);
+			return;
 		}
-		
 		loadLog();
 		saveLog();
 
@@ -192,10 +197,6 @@ public class Legacy extends JavaPlugin implements Listener {
 		} else {
 			return true;
 		}
-	}
-	
-	private void updateLog(){
-		//NeedsImplementation
 	}
 
 	public void reload() {
