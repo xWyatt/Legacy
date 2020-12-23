@@ -1,5 +1,6 @@
 package com.wyattteeter.Legacy;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,6 +23,8 @@ public class Commands implements CommandExecutor {
 			return true;
 		}
 
+		Date now = new Date();
+		
 		String cmd = command.getName().toLowerCase();
 		if (cmd.equals("legacy")) {
 			if (args.length > 1) {
@@ -36,9 +39,16 @@ public class Commands implements CommandExecutor {
 				UUID playerUUID = Bukkit.getPlayer(sender.getName()).getUniqueId();
 				Long totalTime = 0L;
 				
+				// Check file
 				if (Legacy.logConfiguration.contains(playerUUID.toString())) {
 					totalTime += Legacy.logConfiguration.getLong(playerUUID.toString());
 				}
+				
+				// Check memory
+				if (Legacy.timeTracker.containsKey(playerUUID)) {
+					totalTime += (now.getTime() - Legacy.timeTracker.get(playerUUID)) / 1000L;
+				}
+				
 				sender.sendMessage(ChatColor.GREEN + "You have played: " + ChatColor.GOLD
 						+ timePlayed(Long.valueOf(totalTime)));
 				return true;
@@ -55,7 +65,14 @@ public class Commands implements CommandExecutor {
 				long highTime = 0L;
 				for (String each : Legacy.logConfiguration.getConfigurationSection("").getKeys(false)) {
 					UUID eachUUID = UUID.fromString(each);
-					tempTracker.put(eachUUID, Long.valueOf(Legacy.logConfiguration.getLong(each.toString())));
+					
+					// Sum time from file and memory (assuming player is online and currently tracking time)
+					long time = Long.valueOf(Legacy.logConfiguration.getLong(each));
+					if (Legacy.timeTracker.containsKey(eachUUID)) {
+						time += (now.getTime() - Legacy.timeTracker.get(eachUUID)) / 1000L;
+					}
+					
+					tempTracker.put(eachUUID, time);
 				}
 				sender.sendMessage(ChatColor.GREEN + "-= Legacy Leaderboard =-");
 
@@ -113,12 +130,18 @@ public class Commands implements CommandExecutor {
 
 				long totalTime = 0L;
 
+				// Pull time from file
 				if (Legacy.logConfiguration.contains(playerUUID.toString())) {
 					totalTime += Legacy.logConfiguration.getLong(playerUUID.toString());
 				}
-
+				
+				// Pull time from memory
+				if (Legacy.timeTracker.containsKey(playerUUID)) {
+					totalTime += (now.getTime() - Legacy.timeTracker.get(playerUUID)) / 1000L;
+				}
+				
 				if (totalTime == 0L) {
-					sender.sendMessage(ChatColor.DARK_RED + "Player not found.");
+					sender.sendMessage(ChatColor.DARK_RED + playerName + " has no time recorded.");
 					return true;
 				}
 				sender.sendMessage(ChatColor.GREEN + playerName + " played: " + ChatColor.GOLD
