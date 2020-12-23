@@ -4,6 +4,7 @@ version: 2.0
 description: This plugin keeps track of your Players' cumulative play time!
 authors: [xWyatt, vioCode]
 website: http://github.com/xWyatt/Legacy
+api-version: 1.16
 commands:
   legacy:
     description: Displays server play time.
