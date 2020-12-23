@@ -110,8 +110,8 @@ public class Legacy extends JavaPlugin implements Listener {
 	protected void savePlayerTime() {
 		Date now = new Date();
 		for (Player each : getServer().getOnlinePlayers()) {
-			if (timeTracker.containsKey(each)) {
-				long playerSession = (now.getTime() - ((Long) timeTracker.get(each)).longValue()) / 1000L;
+			if (timeTracker.containsKey(each.getUniqueId())) {
+				long playerSession = (now.getTime() - ((Long) timeTracker.get(each.getUniqueId())).longValue()) / 1000L;
 				if (logConfiguration.contains(each.getName())) {
 					logConfiguration.set(each.getName(),
 							Long.valueOf(logConfiguration.getLong(each.getName()) + playerSession));
@@ -120,7 +120,7 @@ public class Legacy extends JavaPlugin implements Listener {
 				}
 				saveLog();
 
-				timeTracker.remove(each);
+				timeTracker.remove(each.getUniqueId());
 			}
 		}
 		now = new Date();
