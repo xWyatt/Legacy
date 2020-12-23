@@ -112,11 +112,11 @@ public class Legacy extends JavaPlugin implements Listener {
 		for (Player each : getServer().getOnlinePlayers()) {
 			if (timeTracker.containsKey(each.getUniqueId())) {
 				long playerSession = (now.getTime() - ((Long) timeTracker.get(each.getUniqueId())).longValue()) / 1000L;
-				if (logConfiguration.contains(each.getName())) {
-					logConfiguration.set(each.getName(),
-							Long.valueOf(logConfiguration.getLong(each.getName()) + playerSession));
+				if (logConfiguration.contains(each.getUniqueId().toString())) {
+					logConfiguration.set(each.getUniqueId().toString(),
+							Long.valueOf(logConfiguration.getLong(each.getUniqueId().toString()) + playerSession));
 				} else {
-					logConfiguration.set(each.getName(), Long.valueOf(playerSession));
+					logConfiguration.set(each.getUniqueId().toString(), Long.valueOf(playerSession));
 				}
 				saveLog();
 
