@@ -24,6 +24,8 @@ public class Legacy extends JavaPlugin implements Listener {
 	public static int top;
 	public static Legacy plugin;
 	public static FileConfiguration logConfiguration = null;
+	public static boolean notifyTracking;
+	public static boolean notifyAutosave;
 	
 	private static final Logger log = Logger.getLogger("Legacy");
 	private static File configFile = null;
@@ -100,7 +102,9 @@ public class Legacy extends JavaPlugin implements Listener {
 
 		timeTracker.remove(key);
 
-		Bukkit.getPlayer(key).sendMessage(ChatColor.ITALIC.DARK_GRAY + "[Legacy] Paused due to idle.");
+		if (notifyTracking) {
+			Bukkit.getPlayer(key).sendMessage(ChatColor.ITALIC.DARK_GRAY + "[Legacy] Paused due to idle.");
+		}
 	}
 
 	protected void savePlayerTime() {
@@ -123,7 +127,10 @@ public class Legacy extends JavaPlugin implements Listener {
 		for (Player each : getServer().getOnlinePlayers()) {
 			timeTracker.put(each.getUniqueId(), Long.valueOf(now.getTime()));
 		}
-		log.info("[Legacy] Auto-saved player time");
+		
+		if (notifyAutosave) {
+			log.info("[Legacy] Auto-saved player time");
+		}
 	}
 
 	@SuppressWarnings("static-access")
@@ -133,7 +140,9 @@ public class Legacy extends JavaPlugin implements Listener {
 		}
 		timeTracker.put(key, Long.valueOf(new Date().getTime()));
 
-		Bukkit.getPlayer(key).sendMessage(ChatColor.ITALIC.DARK_GRAY + "[Legacy] Resumed due to activity.");
+		if (notifyTracking) {
+			Bukkit.getPlayer(key).sendMessage(ChatColor.ITALIC.DARK_GRAY + "[Legacy] Resumed due to activity.");
+		}
 	}
 
 	public void loadConfig() {
@@ -145,7 +154,8 @@ public class Legacy extends JavaPlugin implements Listener {
 		}
 		
 		top = configConfiguration.getInt("top_players");
-		
+		notifyTracking = configConfiguration.getBoolean("notify_tracking", false);
+		notifyAutosave = configConfiguration.getBoolean("notify_autosave", true);
 	}
 
 	public void saveConfig() {

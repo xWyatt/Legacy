@@ -1,8 +1,14 @@
 #Amount of time (in minutes) Legacy waits before marking a player AFK
 idle_timeout: 15
 
+#When true notifies a player when Legacy stops/starts tracking their activity
+notify_tracking: false
+
 #Amount of time (in minutes) Legacy waits to save data to log.yml
 autosave_frequency: 2
+
+#When true prints a log in the console when Legacy autosaves data
+notify_autosave: true
 
 #Number of players displayed when using /legacy top
 top_players: 10
