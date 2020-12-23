@@ -12,7 +12,3 @@ notify_autosave: true
 
 #Number of players displayed when using /legacy top
 top_players: 10
-
-#Please don't touch the version number, or the world might explode :)
-#Really though. Don't touch it.
-version: 2.0
