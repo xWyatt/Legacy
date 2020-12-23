@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,7 +15,6 @@ import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor {
 
-	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 		Boolean isPlayer = sender instanceof Player;
 		if (!isPlayer.booleanValue()) {
@@ -93,14 +93,23 @@ public class Commands implements CommandExecutor {
 					sender.sendMessage(ChatColor.DARK_RED + "You do not have permission to perform this action");
 					return true;
 				}
+				
 				String playerName = args[0];
-
-				if (Bukkit.getOfflinePlayer(playerName) == null) {
+				UUID playerUUID = null;
+				
+				// Try to find the UUID of this player - possible the username is offline
+				for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+					if (offlinePlayer.getName().equals(playerName)) {
+						playerUUID = offlinePlayer.getUniqueId();
+						break; // Exit for loop for *performance*
+					}
+				}
+				
+				// Player not found
+				if (playerUUID == null) {
 					sender.sendMessage(ChatColor.DARK_RED + playerName + " has never played on this server!");
 					return true;
 				}
-
-				UUID playerUUID = Bukkit.getOfflinePlayer(playerName).getUniqueId();
 
 				long totalTime = 0L;
 

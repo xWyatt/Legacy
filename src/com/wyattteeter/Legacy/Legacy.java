@@ -85,7 +85,6 @@ public class Legacy extends JavaPlugin implements Listener {
 		}
 	}
 
-	@SuppressWarnings("static-access")
 	static void pausePlayerLegacy(UUID key) {
 		if (!timeTracker.containsKey(key)) {
 			return;
@@ -103,7 +102,7 @@ public class Legacy extends JavaPlugin implements Listener {
 		timeTracker.remove(key);
 
 		if (notifyTracking) {
-			Bukkit.getPlayer(key).sendMessage(ChatColor.ITALIC.DARK_GRAY + "[Legacy] Paused due to idle.");
+			Bukkit.getPlayer(key).sendMessage(ChatColor.ITALIC + "" + ChatColor.DARK_GRAY + "[Legacy] Paused due to idle.");
 		}
 	}
 
@@ -133,7 +132,6 @@ public class Legacy extends JavaPlugin implements Listener {
 		}
 	}
 
-	@SuppressWarnings("static-access")
 	public static void resumePlayerLegacy(UUID key) {
 		if (timeTracker.containsKey(key)) {
 			return;
@@ -141,7 +139,7 @@ public class Legacy extends JavaPlugin implements Listener {
 		timeTracker.put(key, Long.valueOf(new Date().getTime()));
 
 		if (notifyTracking) {
-			Bukkit.getPlayer(key).sendMessage(ChatColor.ITALIC.DARK_GRAY + "[Legacy] Resumed due to activity.");
+			Bukkit.getPlayer(key).sendMessage(ChatColor.ITALIC + "" + ChatColor.DARK_GRAY + "[Legacy] Resumed due to activity.");
 		}
 	}
 
